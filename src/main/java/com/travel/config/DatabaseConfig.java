@@ -6,23 +6,30 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Configuration
 public class DatabaseConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource() {
+    public DataSource dataSource() throws URISyntaxException {
         // Get DATABASE_URL from environment
         String databaseUrl = System.getenv("DATABASE_URL");
 
         if (databaseUrl != null && !databaseUrl.isEmpty()) {
-            // Add jdbc: prefix if not present
-            if (!databaseUrl.startsWith("jdbc:")) {
-                databaseUrl = "jdbc:" + databaseUrl;
-            }
+            // Parse Railway DATABASE_URL format: postgresql://user:password@host:port/database
+            URI uri = new URI(databaseUrl);
+
+            String username = uri.getUserInfo().split(":")[0];
+            String password = uri.getUserInfo().split(":")[1];
+            String jdbcUrl = "jdbc:postgresql://" + uri.getHost() + ":" + uri.getPort() + uri.getPath();
+
             return DataSourceBuilder.create()
-                    .url(databaseUrl)
+                    .url(jdbcUrl)
+                    .username(username)
+                    .password(password)
                     .driverClassName("org.postgresql.Driver")
                     .build();
         }
