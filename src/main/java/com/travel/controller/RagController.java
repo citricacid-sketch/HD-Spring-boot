@@ -34,7 +34,7 @@ public class RagController {
         return chatClientBuilder.build();
     }
 
-    @PostMapping("/process")
+    @PostMapping(value = "/process", produces = "application/json; charset=UTF-8")
     public ApiResponse<RagProcessResponse> processPrompt(@RequestBody RagProcessRequest request) {
         try {
             RagProcessResponse response = ragService.processPrompt(request.getPrompt());
@@ -44,7 +44,7 @@ public class RagController {
         }
     }
 
-    @PostMapping("/suggest")
+    @PostMapping(value = "/suggest", produces = "application/json; charset=UTF-8")
     public ApiResponse<RagSuggestResponse> suggest(@RequestBody RagSuggestRequest request) {
         try {
             List<String> suggestions = ragService.getSuggestions(request.getPartialPrompt());
@@ -55,7 +55,7 @@ public class RagController {
         }
     }
 
-    @PostMapping("/chat")
+    @PostMapping(value = "/chat", produces = "application/json; charset=UTF-8")
     public ApiResponse<String> chat(@RequestBody Map<String, String> request) {
         try {
             String message = request.get("message");
