@@ -2,6 +2,8 @@ package com.travel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,6 +18,16 @@ public class TravelPlatformBackendApplication {
 			System.setProperty("server.port", port);
 		}
 		SpringApplication.run(TravelPlatformBackendApplication.class, args);
+	}
+
+	@Bean
+	public ApplicationListener<ApplicationReadyEvent> applicationReadyListener() {
+		return event -> {
+			System.out.println("========================================");
+			System.out.println("Travel Platform Backend is ready!");
+			System.out.println("Application started successfully");
+			System.out.println("========================================");
+		};
 	}
 
 	@Bean
