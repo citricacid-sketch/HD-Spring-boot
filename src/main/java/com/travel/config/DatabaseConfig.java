@@ -1,18 +1,18 @@
 package com.travel.config;
 
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class DatabaseConfig {
 
     @Bean
     @Primary
-    public DataSourceProperties dataSourceProperties() {
-        DataSourceProperties properties = new DataSourceProperties();
-
+    public DataSource dataSource() {
         // Get DATABASE_URL from environment
         String databaseUrl = System.getenv("DATABASE_URL");
 
@@ -21,9 +21,16 @@ public class DatabaseConfig {
             if (!databaseUrl.startsWith("jdbc:")) {
                 databaseUrl = "jdbc:" + databaseUrl;
             }
-            properties.setUrl(databaseUrl);
+            return DataSourceBuilder.create()
+                    .url(databaseUrl)
+                    .driverClassName("org.postgresql.Driver")
+                    .build();
         }
 
-        return properties;
+        // Fallback to default
+        return DataSourceBuilder.create()
+                .url("jdbc:postgresql://localhost:5432/railway")
+                .driverClassName("org.postgresql.Driver")
+                .build();
     }
 }
