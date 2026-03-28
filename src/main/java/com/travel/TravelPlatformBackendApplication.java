@@ -40,16 +40,16 @@ public class TravelPlatformBackendApplication {
 				// For development, allow local Vite servers
 				String corsOrigins = System.getenv("CORS_ALLOWED_ORIGINS");
 				if (corsOrigins == null || corsOrigins.trim().isEmpty()) {
-					// Default for development
-					corsOrigins = "http://localhost:5173,http://localhost:5174";
+					// Default for development and production - allow all origins
+					corsOrigins = "*";
 				}
 				String[] allowedOrigins = corsOrigins.split(",");
 
 				registry.addMapping("/api/**")
-					.allowedOrigins(allowedOrigins)
+					.allowedOriginPatterns(allowedOrigins)
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowedHeaders("*")
-					.allowCredentials(true);
+					.allowCredentials(false);
 			}
 		};
 	}
