@@ -311,8 +311,8 @@ public class TripServiceImpl implements TripService {
         Trip trip = tripRepository.findById(tripId)
             .orElseThrow(() -> new RuntimeException("行程不存在"));
         trip.setTransportPrimary(primary);
-        Trip.setTransportSecondary(secondary);
+        trip.setTransportSecondary(secondary);
         trip.setTransportNotes(notes);
-        TripRepository.save(trip);
+        tripRepository.save(trip);
     }
 }
